@@ -1,0 +1,1 @@
+// linked list 기본 함수 구현

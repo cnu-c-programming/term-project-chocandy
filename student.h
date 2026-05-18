@@ -1,0 +1,1 @@
+// Student 구조체와 linked list 함수 선언
