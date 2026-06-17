@@ -21,11 +21,15 @@ Student* create_student(int id, const char* name, int score) {
 }
 
 Student* find_student(Student* head, int id) {
-    /* TODO:
-     * linked list를 처음부터 끝까지 순회하면서
-     * id가 같은 학생을 찾으면 해당 포인터 반환
-     * 없으면 NULL 반환
-     */
+    Student* current = head;
+
+    while (current != NULL) {
+        if (current->id == id) {
+            return current;
+        }
+        current = current->next;
+    }
+
     return NULL;
 }
 
