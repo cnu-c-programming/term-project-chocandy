@@ -84,11 +84,13 @@ int delete_student(Student** head, int id) {
 }
 
 int update_student(Student* head, int id, int score) {
-    /* TODO:
-     * 1. find_student로 학생 검색
-     * 2. 없으면 -1 반환
-     * 3. 있으면 score 수정
-     */
+    Student* student = find_student(head, id);
+
+    if (student == NULL) {
+        return -1;
+    }
+    student->score = score;
+
     return 0;
 }
 
