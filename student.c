@@ -95,20 +95,51 @@ int update_student(Student* head, int id, int score) {
 }
 
 void print_students(Student* head) {
-    /* TODO:
-     * 학생이 없으면 "No students found." 출력
-     * 있으면:
-     * ID Name Score
-     * 1 Alice 90
-     * 형태로 출력
-     */
+    if (head == NULL) {
+        printf("No students found.\n");
+        return;
+    }
+
+    printf("ID Name Score\n");
+
+    Student* current = head;
+    while (current != NULL) {
+        printf("%d %s %d\n", current->id, current->name, current->score);
+        current = current->next;
+    }
 }
 
 void print_stats(Student* head) {
-    /* TODO:
-     * 학생이 없으면 "No student data available." 출력
-     * 있으면 Count, Average, Max, Min 출력
-     */
+    if (head == NULL) {
+        printf("No student data available.\n");
+        return;
+    }
+
+    int count = 0;
+    int sum = 0;
+    int max = head->score;
+    int min = head->score;
+
+    Student* current = head;
+    while (current != NULL) {
+        count++;
+        sum += current->score;
+
+        if (current->score > max) {
+            max = current->score;
+        }
+
+        if (current->score < min) {
+            min = current->score;
+        }
+
+        current = current->next;
+    }
+
+    printf("Count: %d\n", count);
+    printf("Average: %.2f\n", (double)sum / count);
+    printf("Max: %d\n", max);
+    printf("Min: %d\n", min);
 }
 
 void free_students(Student* head) {

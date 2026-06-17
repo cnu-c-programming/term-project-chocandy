@@ -4,22 +4,15 @@
 int main() {
     Student* head = NULL;
 
-    printf("add 1 = %d\n",
-           add_student(&head, 1, "Alice", 90));
+    print_students(head);
+    print_stats(head);
 
-    printf("add 2 = %d\n",
-           add_student(&head, 2, "Bob", 80));
+    add_student(&head, 1001, "Kim", 90);
+    add_student(&head, 1002, "Lee", 80);
+    add_student(&head, 1003, "Park", 70);
 
-    printf("duplicate = %d\n",
-           add_student(&head, 1, "Tom", 70));
-
-    Student* s = find_student(head, 2);
-
-    if (s != NULL) {
-        printf("found: %s %d\n",
-               s->name,
-               s->score);
-    }
+    print_students(head);
+    print_stats(head);
 
     free_students(head);
 
