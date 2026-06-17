@@ -22,6 +22,9 @@ int load_students_from_csv(const char* filename, Student** head) {
      * -2: 잘못된 header
      * -3: 잘못된 CSV 데이터
      */
+    (void)filename;
+    (void)head;
+    
     return 0;
 }
 
@@ -36,5 +39,8 @@ int save_students_to_csv(const char* filename, Student* head) {
      *  0: 성공
      * -1: 파일 쓰기 실패
      */
+    (void)filename;
+    (void)head;
+
     return 0;
 }

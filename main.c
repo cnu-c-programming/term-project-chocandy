@@ -54,23 +54,13 @@ int main(int argc, char *argv[]) {
     const char *csv_path  = "students.csv"; /* default CSV file */
     const char *cmd_file  = NULL;           /* -f <file> argument */
 
-    /* TODO: Parse command-line arguments.
-     *   Supported flags:
-     *     -f <file>   run commands from <file> instead of stdin
-     *   Remaining positional argument (if any): path to students CSV.
-     *
-     *   Example parsing skeleton:
-     *
-     *   for (int i = 1; i < argc; i++) {
-     *       if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) {
-     *           cmd_file = argv[++i];
-     *       } else {
-     *           csv_path = argv[i];
-     *       }
-     *   }
-     */
-    (void)argc;
-    (void)argv;
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) {
+            cmd_file = argv[++i];
+        } else {
+            csv_path = argv[i];
+        }
+    }
 
 #ifdef ADMIN_MODE
     /* Admin shell: supports add, delete, update, save, load, sort, list, find, help, exit */
