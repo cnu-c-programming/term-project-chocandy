@@ -22,6 +22,9 @@
 /* #include "student.h"  */
 /* #include "file_io.h"  */
 /* #include "command.h"  */
+#include "student.h"
+#include "file_io.h"
+#include "command.h"
 
 /* ---------------------------------------------------------------
  * TODO: Implement the interactive shell loop.
