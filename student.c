@@ -5,15 +5,19 @@
 #include "student.h"
 
 Student* create_student(int id, const char* name, int score) {
-    /* TODO:
-     * 1. malloc으로 Student 크기만큼 메모리 할당
-     * 2. malloc 실패 시 NULL 반환
-     * 3. id, name, score 저장
-     * 4. name은 strncpy 사용해서 31자까지만 복사
-     * 5. 마지막 문자는 '\0' 처리
-     * 6. next는 NULL
-     */
-    return NULL;
+    Student* new_student = (Student*)malloc(sizeof(Student));
+
+    if (new_student == NULL) {
+        return NULL;
+    }
+
+    new_student->id = id;
+    strncpy(new_student->name, name, 31);
+    new_student->name[31] = '\0';
+    new_student->score = score;
+    new_student->next = NULL;
+
+    return new_student;
 }
 
 Student* find_student(Student* head, int id) {
@@ -80,9 +84,13 @@ void print_stats(Student* head) {
 }
 
 void free_students(Student* head) {
-    /* TODO:
-     * linked list 전체를 순회하면서 모든 노드 free
-     */
+    Student* current = head;
+
+    while (current != NULL) {
+        Student* next = current->next;
+        free(current);
+        current = next;
+    }
 }
 
 int sort_students(Student** head, const char* key) {
