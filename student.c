@@ -34,17 +34,30 @@ Student* find_student(Student* head, int id) {
 }
 
 int add_student(Student** head, int id, const char* name, int score) {
-    /* TODO:
-     * 1. id 중복 검사
-     * 2. 새 노드 생성
-     * 3. 리스트가 비어 있으면 head에 연결
-     * 4. 비어 있지 않으면 마지막 노드까지 이동 후 연결
-     *
-     * 반환 예시:
-     *  0: 성공
-     * -1: 중복 ID
-     * -2: 메모리 할당 실패
-     */
+    /* 중복 ID 검사 */
+    if (find_student(*head, id) != NULL) {
+        return -1;
+    }
+
+    /* 새 노드 생성 */
+    Student* new_student = create_student(id, name, score);
+    if (new_student == NULL) {
+        return -2;
+    }
+
+    /* 빈 리스트인 경우 */
+    if (*head == NULL) {
+        *head = new_student;
+        return 0;
+    }
+
+    /* 마지막 노드까지 이동 */
+    Student* current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = new_student;
+
     return 0;
 }
 

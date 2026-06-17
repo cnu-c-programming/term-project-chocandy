@@ -2,20 +2,26 @@
 #include "student.h"
 
 int main() {
-    Student* s1 = create_student(1, "Alice", 90);
+    Student* head = NULL;
 
-    if (s1 == NULL) {
-        printf("malloc failed\n");
-        return 1;
+    printf("add 1 = %d\n",
+           add_student(&head, 1, "Alice", 90));
+
+    printf("add 2 = %d\n",
+           add_student(&head, 2, "Bob", 80));
+
+    printf("duplicate = %d\n",
+           add_student(&head, 1, "Tom", 70));
+
+    Student* s = find_student(head, 2);
+
+    if (s != NULL) {
+        printf("found: %s %d\n",
+               s->name,
+               s->score);
     }
 
-    printf("ID: %d\n", s1->id);
-    printf("Name: %s\n", s1->name);
-    printf("Score: %d\n", s1->score);
-
-    free_students(s1);
-
-    printf("free success\n");
+    free_students(head);
 
     return 0;
 }
