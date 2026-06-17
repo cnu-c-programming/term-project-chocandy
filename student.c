@@ -62,16 +62,25 @@ int add_student(Student** head, int id, const char* name, int score) {
 }
 
 int delete_student(Student** head, int id) {
-    /* TODO:
-     * 1. 삭제할 노드를 찾는다
-     * 2. head 노드를 삭제하는 경우와 중간/마지막 노드를 삭제하는 경우 구분
-     * 3. free 처리
-     *
-     * 반환:
-     *  0: 성공
-     * -1: 학생 없음
-     */
-    return 0;
+    Student* current = *head;
+    Student* prev = NULL;
+
+    while (current != NULL) {
+        if (current->id == id) {
+            if (prev == NULL) { // head 노드를 삭제하는 경우
+                *head = current->next;
+            }else {  // 중간 또는 마지막 노드를 삭제하는 경우
+                prev->next = current->next;
+            }
+            free(current);
+            return 0;
+        }
+
+        prev = current;
+        current = current->next;
+    }
+
+    return -1;
 }
 
 int update_student(Student* head, int id, int score) {
