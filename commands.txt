@@ -1,0 +1,17 @@
+# sample command file
+
+list
+find 1001
+
+add 3001 Park 88
+list
+
+update 3001 95
+find 3001
+
+save
+
+delete 3001
+list
+
+exit
