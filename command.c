@@ -66,17 +66,27 @@ void print_prompt(void) {
 #endif
 }
 
+
 ShellResult execute_command(char* line, ShellContext* ctx) {
-    /* TODO:
-     * 1. line 끝의 '\n' 제거
-     * 2. 빈 줄이면 SHELL_OK 반환
-     * 3. 첫 단어를 command 이름으로 분리
-     * 4. 나머지 문자열을 args로 둔다
-     * 5. commands 배열에서 command 이름 검색
-     * 6. 찾으면 해당 handler(args, ctx) 호출
-     * 7. 못 찾으면 "Unknown command or permission denied." 출력
-     */
-    return SHELL_OK;
+    line[strcspn(line, "\n")] = '\0';
+
+    if (line[0] == '\0') {
+        return SHELL_OK;
+    }
+
+    char* command_name = strtok(line, " \t");
+    if (command_name == NULL) {
+        return SHELL_OK;
+    }
+
+    char* args = strtok(NULL, "");
+    for (int i = 0; i < command_count(); i++) {
+        if (strcmp(command_name, commands[i].name) == 0) {
+            return commands[i].handler(args, ctx);
+        }
+    }
+    printf("Unknown command or permission denied.\n");
+    return SHELL_ERR_UNKNOWN_COMMAND;
 }
 
 /* ---------------- 공통 명령어 구현부 ---------------- */
@@ -122,10 +132,10 @@ static ShellResult handle_clear(char* args, ShellContext* ctx) {
 }
 
 static ShellResult handle_exit(char* args, ShellContext* ctx) {
-    /* TODO:
-     * Goodbye. 출력
-     * SHELL_EXIT 반환
-     */
+    (void)args;
+    (void)ctx;
+
+    printf("Goodbye.\n");
     return SHELL_EXIT;
 }
 

@@ -26,16 +26,25 @@
 #include "file_io.h"
 #include "command.h"
 
-/* ---------------------------------------------------------------
- * TODO: Implement the interactive shell loop.
- *   - Print a prompt and read a line from stdin.
- *   - Parse the line into a command and arguments.
- *   - Dispatch to the appropriate handler function.
- *   - Loop until the user types "exit" or EOF.
- * --------------------------------------------------------------- */
 void run_shell(const char *csv_path) {
-    /* TODO */
-    (void)csv_path;
+    ShellContext ctx;
+    ctx.head = NULL;
+    ctx.csv_path = csv_path;
+
+    load_students_from_csv(csv_path, &ctx.head);
+
+    char line[256];
+    while (1) {
+        print_prompt();
+        if (fgets(line, sizeof(line), stdin) == NULL) {
+            break;
+        }
+        ShellResult result = execute_command(line, &ctx);
+        if (result == SHELL_EXIT) {
+            break;
+        }
+    }
+    free_students(ctx.head);
 }
 
 /* ---------------------------------------------------------------
