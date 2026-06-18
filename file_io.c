@@ -82,8 +82,21 @@ int load_students_from_csv(const char* filename, Student** head) {
 }
 
 int save_students_to_csv(const char* filename, Student* head) {
-    (void)filename;
-    (void)head;
+    FILE* fp = fopen(filename, "w");
+    if (fp == NULL) {
+        return -1;
+    }
+    fprintf(fp, "id,name,score\n");
 
+    Student* current = head;
+    while (current != NULL) {
+        fprintf(fp, "%d,%s,%d\n",
+                current->id,
+                current->name,
+                current->score);
+
+        current = current->next;
+    }
+    fclose(fp);
     return 0;
 }

@@ -6,14 +6,12 @@ int main(void) {
     Student* head = NULL;
     int result;
 
-    result = load_students_from_csv("student.csv", &head);
+    add_student(&head, 1001, "Kim", 90);
+    add_student(&head, 1002, "Lee", 80);
+    add_student(&head, 1003, "Park", 70);
 
-    printf("load result: %d\n", result);
-
-    if (result == 0) {
-        print_students(head);
-        print_stats(head);
-    }
+    result = save_students_to_csv("saved.csv", head);
+    printf("save result: %d\n", result);
 
     free_students(head);
 
