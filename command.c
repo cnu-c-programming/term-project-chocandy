@@ -86,7 +86,7 @@ ShellResult execute_command(char* line, ShellContext* ctx) {
         }
     }
     printf("Unknown command or permission denied.\n");
-    return SHELL_ERR_UNKNOWN_COMMAND;
+    return SHELL_ERR_COMMAND_FAILED;
 }
 
 /* ---------------- 공통 명령어 구현부 ---------------- */
@@ -102,13 +102,18 @@ static ShellResult handle_find(char* args, ShellContext* ctx) {
     int id;
     if (args == NULL || sscanf(args, "%d", &id) != 1) {
         printf("Error: invalid id.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
+    }
+
+    if (id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     Student* student = find_student(ctx->head, id);
     if (student == NULL) {
         printf("Error: student not found.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
     printf("ID: %d\n", student->id);
     printf("Name: %s\n", student->name);
@@ -152,14 +157,16 @@ static ShellResult handle_reload(char* args, ShellContext* ctx) {
     (void)args;
     int result = load_students_from_csv(ctx->csv_path, &ctx->head);
 
-    if (result == 0) {
+    if (result >= 0) {
         printf("Reloaded %d students from %s.\n",
-            count_students(ctx->head),
+            result,
             ctx->csv_path);
     }else if (result == -2) {
         printf("Error: invalid header.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     } else {
         printf("Error: invalid CSV.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     }
     return SHELL_OK;
 }
@@ -167,16 +174,17 @@ static ShellResult handle_reload(char* args, ShellContext* ctx) {
 static ShellResult handle_sort(char* args, ShellContext* ctx) {
     if (args == NULL) {
         printf("Error: missing argument.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (strcmp(args, "name") != 0 && strcmp(args, "score") != 0) {
         printf("Error: invalid sort key.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (sort_students(&ctx->head, args) != 0) {
         printf("Error: invalid sort key.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     } else {
         printf("Students sorted by %s.\n", args);
     }
@@ -197,6 +205,7 @@ static ShellResult handle_save(char* args, ShellContext* ctx) {
             ctx->csv_path);
     } else {
         printf("Error: save failed.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     return SHELL_OK;
@@ -209,25 +218,27 @@ static ShellResult handle_add(char* args, ShellContext* ctx) {
     if (args == NULL ||
         sscanf(args, "%d %99s %d", &id, name, &score) != 3) {
         printf("Error: missing argument.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (id <= 0) {
         printf("Error: invalid id.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (score < 0 || score > 100) {
         printf("Error: invalid score.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     int result = add_student(&ctx->head, id, name, score);
 
     if (result == -1) {
         printf("Error: duplicate id.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     } else if (result == -2) {
         printf("Error: memory allocation failed.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     } else {
         printf("Student added.\n");
     }
@@ -240,11 +251,17 @@ static ShellResult handle_delete(char* args, ShellContext* ctx) {
 
     if (args == NULL || sscanf(args, "%d", &id) != 1) {
         printf("Error: missing argument.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
+    }
+
+    if (id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (delete_student(&ctx->head, id) != 0) {
         printf("Error: student not found.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     } else {
         printf("Student deleted.\n");
     }
@@ -258,16 +275,22 @@ static ShellResult handle_update(char* args, ShellContext* ctx) {
     if (args == NULL ||
         sscanf(args, "%d %d", &id, &score) != 2) {
         printf("Error: missing argument.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
+    }
+
+    if (id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (score < 0 || score > 100) {
         printf("Error: invalid score.\n");
-        return SHELL_OK;
+        return SHELL_ERR_COMMAND_FAILED;
     }
 
     if (update_student(ctx->head, id, score) != 0) {
         printf("Error: student not found.\n");
+        return SHELL_ERR_COMMAND_FAILED;
     } else {
         printf("Student updated.\n");
     }

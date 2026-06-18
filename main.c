@@ -14,7 +14,7 @@ void run_shell(const char *csv_path) {
     int load_result = load_students_from_csv(csv_path, &ctx.head);
     if (load_result == -2) {
         printf("Error: invalid header.\n");
-    } else if (load_result != 0) {
+    } else if (load_result < 0) {
         printf("Error: invalid CSV.\n");
     }
     #ifdef ADMIN_MODE
@@ -55,7 +55,7 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
     int load_result = load_students_from_csv(csv_path, &ctx.head);
     if (load_result == -2) {
         printf("Error: invalid header.\n");
-    } else if (load_result != 0) {
+    } else if (load_result < 0) {
         printf("Error: invalid CSV.\n");
     }
     #ifdef ADMIN_MODE
@@ -72,20 +72,32 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
     int line_no = 0;
 
     while (fgets(line, sizeof(line), fp) != NULL) {
-        line_no++;
-        line[strcspn(line, "\n")] = '\0';
+        char *command = line;
+
+        line[strcspn(line, "\r\n")] = '\0';
+
+        while (*command == ' ' || *command == '\t') {
+            command++;
+        }
+
         /* 빈 줄 무시 */
-        if (line[0] == '\0') {
+        if (command[0] == '\0') {
             continue;
         }
         /* # 주석 무시 */
-        if (line[0] == '#') {
+        if (command[0] == '#') {
             continue;
         }
-        printf("[%d] %s\n", line_no, line);
-        ShellResult result = execute_command(line, &ctx);
+
+        line_no++;
+        printf("[command file:%d] %s\n", line_no, command);
+        ShellResult result = execute_command(command, &ctx);
         if (result == SHELL_EXIT) {
             break;
+        }
+        if (result == SHELL_ERR_COMMAND_FAILED) {
+            printf("Skipped line %d.\n", line_no);
+            continue;
         }
     }
     fclose(fp);
@@ -104,11 +116,22 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) {
+        if (strcmp(argv[i], "-f") == 0) {
+            if (i + 1 >= argc) {
+                printf("Error: command file not specified.\n");
+                return 1;
+            }
             cmd_file = argv[++i];
         } else {
             csv_path = argv[i];
         }
+    }
+
+    if (csv_path == NULL) {
+        printf("Usage:\n");
+        printf("./admin_shell <csv_file> [-f command_file]\n");
+        printf("./client_shell <csv_file> [-f command_file]\n");
+        return 1;
     }
 
 #ifdef ADMIN_MODE
