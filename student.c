@@ -152,6 +152,17 @@ void free_students(Student* head) {
     }
 }
 
+int count_students(Student* head) {
+    int count = 0;
+
+    while (head != NULL) {
+        count++;
+        head = head->next;
+    }
+
+    return count;
+}
+
 int sort_students(Student** head, const char* key) {
     /* TODO:
      * 보너스 기능

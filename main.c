@@ -1,27 +1,7 @@
-/*
- * main.c  –  Mini Student Shell
- *
- * TODO: Implement admin_shell and client_shell.
- *
- * Build:
- *   make admin   →  admin_shell  (compiled with -DADMIN_MODE)
- *   make client  →  client_shell (compiled with -DCLIENT_MODE)
- *
- * Usage:
- *   ./admin_shell [students.csv]
- *   ./admin_shell -f commands.txt [students.csv]
- *   ./client_shell [students.csv]
- *   ./client_shell -f commands.txt [students.csv]
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* TODO: Add your own header includes here */
-/* #include "student.h"  */
-/* #include "file_io.h"  */
-/* #include "command.h"  */
 #include "student.h"
 #include "file_io.h"
 #include "command.h"
@@ -52,12 +32,6 @@ void run_shell(const char *csv_path) {
     free_students(ctx.head);
 }
 
-/* ---------------------------------------------------------------
- * TODO: Implement batch mode – read commands from a file.
- *   - Open cmd_file for reading.
- *   - Execute each line as a command (same logic as run_shell).
- *   - Close the file when done.
- * --------------------------------------------------------------- */
 void run_command_file(const char *cmd_file, const char *csv_path) {
     FILE *fp = fopen(cmd_file, "r");
     if (fp == NULL) {
@@ -101,8 +75,15 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
 }
 
 int main(int argc, char *argv[]) {
-    const char *csv_path  = "students.csv"; /* default CSV file */
-    const char *cmd_file  = NULL;           /* -f <file> argument */
+    const char *csv_path  = NULL;
+    const char *cmd_file  = NULL;
+
+    if (argc < 2) {
+        printf("Usage:\n");
+        printf("./admin_shell <csv_file> [-f command_file]\n");
+        printf("./client_shell <csv_file> [-f command_file]\n");
+        return 1;
+    }
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) {

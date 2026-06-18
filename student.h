@@ -21,6 +21,8 @@ void print_students(Student* head);
 void print_stats(Student* head);
 void free_students(Student* head);
 
+int count_students(Student* head);
+
 /* 보너스 기능 */
 int sort_students(Student** head, const char* key);
 
