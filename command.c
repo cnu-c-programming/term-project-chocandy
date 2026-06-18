@@ -208,6 +208,11 @@ static ShellResult handle_add(char* args, ShellContext* ctx) {
         return SHELL_OK;
     }
 
+    if (id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_OK;
+    }
+
     if (score < 0 || score > 100) {
         printf("Error: invalid score.\n");
         return SHELL_OK;
