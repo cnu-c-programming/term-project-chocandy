@@ -92,21 +92,28 @@ ShellResult execute_command(char* line, ShellContext* ctx) {
 /* ---------------- 공통 명령어 구현부 ---------------- */
 
 static ShellResult handle_list(char* args, ShellContext* ctx) {
-    /* TODO:
-     * 인자 없어야 함
-     * print_students 호출
-     */
+    (void)args;
+    print_students(ctx->head);
+
     return SHELL_OK;
 }
 
 static ShellResult handle_find(char* args, ShellContext* ctx) {
-    /* TODO:
-     * args에서 id 하나 읽기
-     * id가 없거나 숫자가 아니면 Error 출력
-     * find_student 호출
-     * 없으면 Error: student not found.
-     * 있으면 ID, Name, Score 출력
-     */
+    int id;
+    if (args == NULL || sscanf(args, "%d", &id) != 1) {
+        printf("Error: invalid id.\n");
+        return SHELL_OK;
+    }
+
+    Student* student = find_student(ctx->head, id);
+    if (student == NULL) {
+        printf("Error: student not found.\n");
+        return SHELL_OK;
+    }
+    printf("ID: %d\n", student->id);
+    printf("Name: %s\n", student->name);
+    printf("Score: %d\n", student->score);
+
     return SHELL_OK;
 }
 
