@@ -31,7 +31,12 @@ void run_shell(const char *csv_path) {
     ctx.head = NULL;
     ctx.csv_path = csv_path;
 
-    load_students_from_csv(csv_path, &ctx.head);
+    int load_result = load_students_from_csv(csv_path, &ctx.head);
+    if (load_result == -2) {
+        printf("Error: invalid header.\n");
+    } else if (load_result != 0) {
+        printf("Error: invalid CSV.\n");
+    }
 
     char line[256];
     while (1) {
@@ -64,7 +69,12 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
     ctx.head = NULL;
     ctx.csv_path = csv_path;
 
-    load_students_from_csv(csv_path, &ctx.head);
+    int load_result = load_students_from_csv(csv_path, &ctx.head);
+    if (load_result == -2) {
+        printf("Error: invalid header.\n");
+    } else if (load_result != 0) {
+        printf("Error: invalid CSV.\n");
+    }
 
     char line[256];
     int line_no = 0;

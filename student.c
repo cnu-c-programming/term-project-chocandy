@@ -34,23 +34,23 @@ Student* find_student(Student* head, int id) {
 }
 
 int add_student(Student** head, int id, const char* name, int score) {
+    if (head == NULL || id <= 0 || score < 0 || score > 100 || name == NULL) {
+        return -3;
+    }
     /* 중복 ID 검사 */
     if (find_student(*head, id) != NULL) {
         return -1;
     }
-
     /* 새 노드 생성 */
     Student* new_student = create_student(id, name, score);
     if (new_student == NULL) {
         return -2;
     }
-
     /* 빈 리스트인 경우 */
     if (*head == NULL) {
         *head = new_student;
         return 0;
     }
-
     /* 마지막 노드까지 이동 */
     Student* current = *head;
     while (current->next != NULL) {

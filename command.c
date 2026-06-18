@@ -118,23 +118,25 @@ static ShellResult handle_find(char* args, ShellContext* ctx) {
 }
 
 static ShellResult handle_stats(char* args, ShellContext* ctx) {
-    /* TODO:
-     * print_stats 호출
-     */
+    (void)args;
+    print_stats(ctx->head);
     return SHELL_OK;
 }
 
 static ShellResult handle_help(char* args, ShellContext* ctx) {
-    /* TODO:
-     * commands 배열을 순회하면서 usage와 description 출력
-     */
+    (void)args;
+    (void)ctx;
+    for (int i = 0; i < command_count(); i++) {
+        printf("%s - %s\n", commands[i].usage, commands[i].description);
+    }
+
     return SHELL_OK;
 }
 
 static ShellResult handle_clear(char* args, ShellContext* ctx) {
-    /* TODO:
-     * printf("\033[2J\033[H");
-     */
+    (void)args;
+    (void)ctx;
+    printf("\033[2J\033[H");
     return SHELL_OK;
 }
 
@@ -147,20 +149,36 @@ static ShellResult handle_exit(char* args, ShellContext* ctx) {
 }
 
 static ShellResult handle_reload(char* args, ShellContext* ctx) {
-    /* TODO:
-     * load_students_from_csv(ctx->csv_path, &ctx->head) 호출
-     * 성공/실패 메시지 출력
-     */
+    (void)args;
+    int result = load_students_from_csv(ctx->csv_path, &ctx->head);
+
+    if (result == 0) {
+        printf("Reloaded successfully.\n");
+    } else if (result == -2) {
+        printf("Error: invalid header.\n");
+    } else {
+        printf("Error: invalid CSV.\n");
+    }
     return SHELL_OK;
 }
 
 static ShellResult handle_sort(char* args, ShellContext* ctx) {
-    /* TODO:
-     * args가 name 또는 score인지 확인
-     * sort_students 호출
-     * sort name이면 "sorted by name" 포함 메시지 출력
-     * 잘못된 key면 "Error" 포함 메시지 출력
-     */
+    if (args == NULL) {
+        printf("Error: missing argument.\n");
+        return SHELL_OK;
+    }
+
+    if (strcmp(args, "name") != 0 && strcmp(args, "score") != 0) {
+        printf("Error: invalid sort key.\n");
+        return SHELL_OK;
+    }
+
+    if (sort_students(&ctx->head, args) != 0) {
+        printf("Error: invalid sort key.\n");
+    } else {
+        printf("Students sorted by %s.\n", args);
+    }
+
     return SHELL_OK;
 }
 
