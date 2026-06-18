@@ -24,6 +24,7 @@ static int is_number(const char* str) {
 int load_students_from_csv(const char* filename, Student** head) {
     FILE* fp;
     char line[LINE_SIZE];
+    int count = 0;
 
     if (*head != NULL) {
         free_students(*head);
@@ -96,10 +97,11 @@ int load_students_from_csv(const char* filename, Student** head) {
             fclose(fp);
             return -3;
         }
+        count++;
     }
 
     fclose(fp);
-    return 0;
+    return count;
 }
 
 int save_students_to_csv(const char* filename, Student* head) {

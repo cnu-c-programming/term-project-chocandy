@@ -17,6 +17,15 @@ void run_shell(const char *csv_path) {
     } else if (load_result != 0) {
         printf("Error: invalid CSV.\n");
     }
+    #ifdef ADMIN_MODE
+        printf("[Admin Program]\n");
+    #else
+        printf("[Client Program]\n");
+    #endif
+
+        printf("Loaded %d students from %s.\n\n",
+            load_result >= 0 ? load_result : 0,
+            csv_path);
 
     char line[256];
     while (1) {
@@ -49,6 +58,15 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
     } else if (load_result != 0) {
         printf("Error: invalid CSV.\n");
     }
+    #ifdef ADMIN_MODE
+        printf("[Admin Program]\n");
+    #else
+        printf("[Client Program]\n");
+    #endif
+
+    printf("Loaded %d students from %s.\n\n",
+        load_result >= 0 ? load_result : 0,
+        csv_path);
 
     char line[256];
     int line_no = 0;
