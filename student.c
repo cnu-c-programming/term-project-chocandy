@@ -164,13 +164,50 @@ int count_students(Student* head) {
 }
 
 int sort_students(Student** head, const char* key) {
-    /* TODO:
-     * 보너스 기능
-     * key가 "name"이면 이름 오름차순
-     * key가 "score"이면 점수 오름차순
-     * 잘못된 key면 -1 반환
-     *
-     * 구현 방식은 버블 정렬처럼 노드 안의 데이터만 swap해도 됨
-     */
+    Student* i;
+    Student* j;
+
+    if (head == NULL || *head == NULL || key == NULL) {
+        return -1;
+    }
+
+    if (strcmp(key, "id") != 0 &&
+        strcmp(key, "name") != 0 &&
+        strcmp(key, "score") != 0) {
+        return -1;
+    }
+
+    for (i = *head; i != NULL; i = i->next) {
+        for (j = i->next; j != NULL; j = j->next) {
+            int should_swap = 0;
+
+            if (strcmp(key, "id") == 0 && i->id > j->id) {
+                should_swap = 1;
+            } else if (strcmp(key, "name") == 0 &&
+                       strcmp(i->name, j->name) > 0) {
+                should_swap = 1;
+            } else if (strcmp(key, "score") == 0 &&
+                       i->score > j->score) {
+                should_swap = 1;
+            }
+
+            if (should_swap) {
+                int temp_id = i->id;
+                int temp_score = i->score;
+                char temp_name[32];
+
+                strcpy(temp_name, i->name);
+
+                i->id = j->id;
+                i->score = j->score;
+                strcpy(i->name, j->name);
+
+                j->id = temp_id;
+                j->score = temp_score;
+                strcpy(j->name, temp_name);
+            }
+        }
+    }
+
     return 0;
 }
