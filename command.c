@@ -169,44 +169,82 @@ static ShellResult handle_sort(char* args, ShellContext* ctx) {
 #ifdef ADMIN_MODE
 
 static ShellResult handle_save(char* args, ShellContext* ctx) {
-    /* TODO:
-     * save_students_to_csv 호출
-     * 성공하면 Saved ... 출력
-     */
+    (void)args;
+
+    if (save_students_to_csv(ctx->csv_path, ctx->head) == 0) {
+        printf("Saved successfully.\n");
+    } else {
+        printf("Error: save failed.\n");
+    }
+
     return SHELL_OK;
 }
 
 static ShellResult handle_add(char* args, ShellContext* ctx) {
-    /* TODO:
-     * args에서 id, name, score 읽기
-     * id 양의 정수 검사
-     * name 비어있거나 쉼표 포함 여부 검사
-     * score 0~100 검사
-     * 중복 ID 검사
-     * add_student 호출
-     * 성공하면 Student added.
-     */
+    int id, score;
+    char name[100];
+
+    if (args == NULL ||
+        sscanf(args, "%d %99s %d", &id, name, &score) != 3) {
+        printf("Error: missing argument.\n");
+        return SHELL_OK;
+    }
+
+    if (score < 0 || score > 100) {
+        printf("Error: invalid score.\n");
+        return SHELL_OK;
+    }
+
+    int result = add_student(&ctx->head, id, name, score);
+
+    if (result == -1) {
+        printf("Error: duplicate id.\n");
+    } else if (result == -2) {
+        printf("Error: memory allocation failed.\n");
+    } else {
+        printf("Student added.\n");
+    }
+
     return SHELL_OK;
 }
 
 static ShellResult handle_delete(char* args, ShellContext* ctx) {
-    /* TODO:
-     * args에서 id 읽기
-     * delete_student 호출
-     * 없으면 Error: student not found.
-     * 성공하면 Student deleted.
-     */
+    int id;
+
+    if (args == NULL || sscanf(args, "%d", &id) != 1) {
+        printf("Error: missing argument.\n");
+        return SHELL_OK;
+    }
+
+    if (delete_student(&ctx->head, id) != 0) {
+        printf("Error: student not found.\n");
+    } else {
+        printf("Student deleted.\n");
+    }
+
     return SHELL_OK;
 }
 
 static ShellResult handle_update(char* args, ShellContext* ctx) {
-    /* TODO:
-     * args에서 id, score 읽기
-     * score 범위 검사
-     * update_student 호출
-     * 없으면 Error: student not found.
-     * 성공하면 Student updated.
-     */
+    int id, score;
+
+    if (args == NULL ||
+        sscanf(args, "%d %d", &id, &score) != 2) {
+        printf("Error: missing argument.\n");
+        return SHELL_OK;
+    }
+
+    if (score < 0 || score > 100) {
+        printf("Error: invalid score.\n");
+        return SHELL_OK;
+    }
+
+    if (update_student(ctx->head, id, score) != 0) {
+        printf("Error: student not found.\n");
+    } else {
+        printf("Student updated.\n");
+    }
+
     return SHELL_OK;
 }
 
