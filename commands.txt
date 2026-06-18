@@ -1,8 +1,0 @@
-# batch test
-list
-find 1001
-add 3001 Park 88
-update 3001 95
-delete 3001
-list
-exit
