@@ -153,8 +153,10 @@ static ShellResult handle_reload(char* args, ShellContext* ctx) {
     int result = load_students_from_csv(ctx->csv_path, &ctx->head);
 
     if (result == 0) {
-        printf("Reloaded successfully.\n");
-    } else if (result == -2) {
+        printf("Reloaded %d students from %s.\n",
+            count_students(ctx->head),
+            ctx->csv_path);
+    }else if (result == -2) {
         printf("Error: invalid header.\n");
     } else {
         printf("Error: invalid CSV.\n");
@@ -190,7 +192,9 @@ static ShellResult handle_save(char* args, ShellContext* ctx) {
     (void)args;
 
     if (save_students_to_csv(ctx->csv_path, ctx->head) == 0) {
-        printf("Saved successfully.\n");
+        printf("Saved %d students to %s.\n",
+            count_students(ctx->head),
+            ctx->csv_path);
     } else {
         printf("Error: save failed.\n");
     }
